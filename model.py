@@ -177,7 +177,7 @@ class AttentionModel(nn.Module):
     def __init__(self, d_model: int = 128, nhead: int = 8, num_encoder_layers: int = 3,
                  num_decoder_layers: int = 1, dim_feedforward: int = 512, dropout: float = 0.1,
                  activation: Union[str, Callable[[torch.Tensor], torch.Tensor]] = F.relu,
-                 norm_parameters: dict = norms_parameters['layer'], norm_first: bool = False, device=None, dtype=None,
+                 norm_parameters: dict = norms_parameters['batch'], norm_first: bool = False, device=None, dtype=None,
                  num_node_features: int = 2) -> None:
         factory_kwargs = {'device': device, 'dtype': dtype}
         super(AttentionModel, self).__init__()
@@ -198,7 +198,7 @@ class AttentionModel(nn.Module):
             decoder_layer, num_decoder_layers
         )  # https://pytorch.org/docs/stable/generated/torch.nn.TransformerDecoder.html
         self.mha = nn.MultiheadAttention(
-            d_model, nhead, dropout=0.0, bias=True, add_bias_kv=False, add_zero_attn=False, kdim=None, vdim=None, batch_first=batch_first, **factory_kwargs
+            d_model, nhead, dropout=dropout, bias=True, add_bias_kv=False, add_zero_attn=False, kdim=None, vdim=None, batch_first=batch_first, **factory_kwargs
         )  # https://pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html
         self._reset_parameters()
         self.nhead = nhead
